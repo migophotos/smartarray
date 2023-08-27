@@ -328,8 +328,8 @@ class SmartArray:
     def filter(self, by_value=None, by_key=None) -> List[{}]:
         """
         Finds all concurrences specified by key or by value, builds and
-        returns the list of pairs in form [{key:value}, {key:value}, ...],
-        one of two arguments must be specified!
+        returns the list of pairs in form [{key:value}, {key:value}, ...]
+        In case of two parameters are None this function return the list of all pairs
 
         :param by_value: [any] find all concurrences by specified value
         :param by_key: [any]  find all concurrences by specified key
@@ -356,7 +356,7 @@ class SmartArray:
         """
         Returns the safe copy of this array
         :return:
-            SmartArray: the copy of current instance of SmartArray class
+            SmartArray: the copy of current instance of SmartArray
         """
         new_arr = SmartArray()
         item = self.__items
