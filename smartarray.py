@@ -21,6 +21,20 @@ class ArrayItem:
 class SmartArray:
     """
     Array implementation with handy API
+    append(val, key=None, count: int = 1) - append specified items to array
+    at(index: int = -1, key=None, value=None) - find and return an item by one of parameter: index or key or value
+    delete(at_index=-1, value=None, key=None) - find and delete an item from array
+    filter(by_value=None, by_key=None) - filter an item by key or by value and return dictionary
+    get_sorted_list() - return the previously sorted list
+    index(value=None, key=None) - find and return an item by key or value
+    insert(value, key=None, at_index=0) - insert an item into specified position
+    length() - returns the count of elements in array
+    scopy() - returns the safe copy of array
+    set_at(index, value=None, key=None) - store the new value and key at specified index
+    sort(reverse: bool = False, sort_by: str = "val") - sort an array and returns sorted list
+    value(index: int = -1, key=None) - find and return an item by index and or key
+    key(index: int = -1, value=None) - find and return an item by index and or value
+
     """
     def __init__(self, length=0, initial_value=0, from_list=[], from_dict={}):
         self.__next = None
@@ -178,7 +192,13 @@ class SmartArray:
             else:
                 list_to_sort.sort(reverse=reverse, key=self.sort_by_value)
 
-            self.__sorted_list = list_to_sort
+            self.__sorted_list = []
+            for item in list_to_sort:
+                if item['key'] is None:
+                    self.__sorted_list.append(item['value'])
+                else:
+                    self.__sorted_list.append(item)
+
             return self.__sorted_list
 
     def get_sorted_list(self) -> List:
@@ -447,3 +467,7 @@ if __name__ == "__main__":
     count = fruits.length()
     fruits.value(index=0)
     print(fruits.value(count-2))
+
+    larr = SmartArray(from_list=[1,2,3,4,5,0,9,8,7,6])
+    sorted = larr.sort()
+
