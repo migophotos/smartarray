@@ -62,5 +62,11 @@ def test_array_copying_and_sort():
     print(f"array sorted: {arr.get_sorted_list()}\na.copy sorted: {arr_copy.get_sorted_list()}")
 
 
+def test_clear_array():
+    arr = SmartArray(from_dict={"k1": 1, "k2": 2, "k3": 3, "k4": 3, "k5": 5})
+    arr.clear()
+    assert(arr.length() == 0)
+
+
 if __name__ == "__main__":
     arr1 = SmartArray()

@@ -20,7 +20,8 @@ class ArrayItem:
 
 class SmartArray:
     """
-    Array implementation with handy API
+    Array implementation with handy API:
+
     append(val, key=None, count: int = 1) - append specified items to array
     at(index: int = -1, key=None, value=None) - find and return an item by one of parameter: index or key or value
     delete(at_index=-1, value=None, key=None) - find and delete an item from array
@@ -41,17 +42,23 @@ class SmartArray:
         self.__last = None
         self.__items = None
         self.__length = 0
-        self.__sorted_list = []
+        self.__sorted_list = None
+
         if length:
             self.__add(initial_value, n=length)
-        if len(from_list):
-            for il in from_list:
-                self.__add(il)
 
-        for dk in from_dict:
-            self.__add(from_dict[dk], key=dk)
+        self.from_list(from_list)
+        self.from_dict(from_dict)
 
         self.__length = self.length()
+
+    def from_list(self, from_list):
+        for il in from_list:
+            self.__add(il)
+
+    def from_dict(self, from_dict: dict):
+        for dk in from_dict:
+            self.__add(from_dict[dk], key=dk)
 
     def __str__(self):
         result = "["
@@ -255,6 +262,15 @@ class SmartArray:
         self.__length = self.__count()
         return True
 
+    def clear(self):
+        """
+        Delete all items from SmartArray
+        :return: None
+        """
+        while self.length():
+            self.delete(self.length()-1)
+        self.__sorted_list = None
+
     def delete(self, at_index=-1, value=None, key=None):
         """
         Delete item from array. ArrayItem may be identified by its position, by value or by key
@@ -270,6 +286,10 @@ class SmartArray:
 
         if at_index == 0:
             self.__items = del_item.next
+            if del_item.next is not None:
+                del_item.next.prev = None
+            if self.__length == 1:
+                self.__last = None
             del del_item
         else:
             del_item.prev.next = del_item.next
@@ -470,4 +490,6 @@ if __name__ == "__main__":
 
     larr = SmartArray(from_list=[1,2,3,4,5,0,9,8,7,6])
     sorted = larr.sort()
+    larr.clear()
+    sorted = 0
 
