@@ -61,6 +61,35 @@ def test_array_modification():
     assert arr.length() == 9
 
 
+def test_array_loop_modification():
+    arr = SmartArray(from_list=[1, 2, 3, 4, 5])
+    print(f'\noriginal array: {arr}')
+    for index, el in enumerate(arr):
+        val = arr[index]
+        assert val == el
+        arr[index] = val * val
+        assert arr[index] == val * val
+
+    print(f'squared array: {arr}')
+
+
+def test_array_iterator_reset():
+    arr = SmartArray(from_list=[1, 2, 3, 4, 5])
+    print('\n')
+    i = 0
+    for el in arr:
+        print(f'arr[{i}] == {el}')
+        i += 1
+        if i == 3:
+            break
+
+    n = 0
+    for el in arr:
+        print(f'arr[{n}]: {el}')
+        assert el == arr[n]
+        n += 1
+
+
 def test_array_copying_and_sort():
     arr = SmartArray()
     for i in range(10):

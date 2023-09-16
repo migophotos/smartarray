@@ -91,6 +91,7 @@ class SmartArray:
         return result
 
     def __iter__(self):
+        self.__next = None
         return self
 
     def __next__(self):
@@ -420,78 +421,103 @@ class SmartArray:
 
 
 if __name__ == "__main__":
-    test_array = SmartArray()
-    for i in range(0, 100):
-        test_array.append(i, f"k.{i}")
+    # test_array = SmartArray()
+    # for i in range(0, 100):
+    #     test_array.append(i, f"k.{i}")
+    #
+    # print(test_array)
+    # print(test_array.index(value=50))
+    # print(test_array.index(key="k.50"))
+    # print(test_array.length())
+    # print(test_array.delete(50))
+    # print(test_array.length())
+    #
+    # if test_array.set_at(10, 100, key="k.100"):
+    #     print(test_array)
+    #
+    # arr_copy = test_array.scopy()
+    # print(arr_copy)
+    # arr_copy.set_at(20, 100, key="k.20")
+    # arr_copy.set_at(30, 100, key="k.20")
+    # arr_copy.set_at(40, 100, key="k.20")
+    # arr_copy.set_at(50, 100, key="k.20")
+    #
+    # fv100 = arr_copy.filter(by_value=100)
+    # fk20 = arr_copy.filter(by_key="k.20")
+    # print(fv100, " : ", fk20)
+    #
+    # to_be_sorted = SmartArray()
+    # for i in range(0, 10):
+    #     to_be_sorted.append(10-i)
+    #
+    # print("sort by value, ascending:", to_be_sorted.sort(reverse=False))
+    # print("sort by value, descending", to_be_sorted.sort(reverse=True))
+    # print("sort by key, ascending", to_be_sorted.sort(reverse=False, sort_by="key"))
+    # print("sort by key, descending", to_be_sorted.sort(reverse=True, sort_by="key"))
+    #
+    # for i in arr_copy:
+    #     v = i
+    #
+    # myit = iter(fv100)
+    # print(next(myit))
+    # print(next(myit))
+    # print(next(myit))
+    # print(next(myit))
+    #
+    # #   create SmartArray from list
+    # arr = ["banana", "orange", "kiwi"]
+    # fruits = SmartArray(from_list=arr)
+    # print(f"fruits length is: {fruits.length()}: {fruits}")
+    #
+    # #   create SmartArray from dict
+    # dobj = {"k1": "banana", "k2": "orange", "k3": "kiwi"}
+    # fruits_arr = SmartArray(from_list=arr, from_dict=dobj)
+    # print(f"fruits length is: {fruits_arr.length()}: {fruits_arr}")
+    #
+    # fruits[0] = arr_copy[0]
+    # fruits[1] = {"k1": 1}
+    # fruits.append("pineapple")
+    # fruits.append("lemon")
+    # fruits.insert("tomatoes", at_index=4)
+    # print(fruits)
+    # fruits.delete(0)
+    # print(fruits)
+    # # fruits[1000] = 0  # IndexException
+    #
+    # count = fruits.length()
+    # fruits.delete(count-1)
+    #
+    # count = fruits.length()
+    # fruits.value(index=0)
+    # print(fruits.value(count-2))
+    #
+    # larr = SmartArray(from_list=[1,2,3,4,5,0,9,8,7,6])
+    # sorted = larr.sort()
+    # larr.clear()
+    # sorted = 0
 
-    print(test_array)
-    print(test_array.index(value=50))
-    print(test_array.index(key="k.50"))
-    print(test_array.length())
-    print(test_array.delete(50))
-    print(test_array.length())
+    arr = SmartArray(from_list=[1, 2, 3, 4, 5])
+    print(f'original array: {arr}')
+    for index, el in enumerate(arr):
+        val = arr[index]
+        arr[index] = val * val
 
-    if test_array.set_at(10, 100, key="k.100"):
-        print(test_array)
+    print(f'squared array: {arr}')
 
-    arr_copy = test_array.scopy()
-    print(arr_copy)
-    arr_copy.set_at(20, 100, key="k.20")
-    arr_copy.set_at(30, 100, key="k.20")
-    arr_copy.set_at(40, 100, key="k.20")
-    arr_copy.set_at(50, 100, key="k.20")
+    for index, el in enumerate(arr):
+        val = arr[index]
+        arr[index] = val // (index + 1)
+    print(f'original array: {arr}')
 
-    fv100 = arr_copy.filter(by_value=100)
-    fk20 = arr_copy.filter(by_key="k.20")
-    print(fv100, " : ", fk20)
+    i = 0
+    for el in arr:
+        print(f'arr[{i}] == {el}')
+        i += 1
+        if i == 3:
+            break
 
-    to_be_sorted = SmartArray()
-    for i in range(0, 10):
-        to_be_sorted.append(10-i)
+    for el in arr:
+        print(f'{el}')
 
-    print("sort by value, ascending:", to_be_sorted.sort(reverse=False))
-    print("sort by value, descending", to_be_sorted.sort(reverse=True))
-    print("sort by key, ascending", to_be_sorted.sort(reverse=False, sort_by="key"))
-    print("sort by key, descending", to_be_sorted.sort(reverse=True, sort_by="key"))
 
-    for i in arr_copy:
-        v = i
-
-    myit = iter(fv100)
-    print(next(myit))
-    print(next(myit))
-    print(next(myit))
-    print(next(myit))
-
-    #   create SmartArray from list
-    arr = ["banana", "orange", "kiwi"]
-    fruits = SmartArray(from_list=arr)
-    print(f"fruits length is: {fruits.length()}: {fruits}")
-
-    #   create SmartArray from dict
-    dobj = {"k1": "banana", "k2": "orange", "k3": "kiwi"}
-    fruits_arr = SmartArray(from_list=arr, from_dict=dobj)
-    print(f"fruits length is: {fruits_arr.length()}: {fruits_arr}")
-
-    fruits[0] = arr_copy[0]
-    fruits[1] = {"k1": 1}
-    fruits.append("pineapple")
-    fruits.append("lemon")
-    fruits.insert("tomatoes", at_index=4)
-    print(fruits)
-    fruits.delete(0)
-    print(fruits)
-    # fruits[1000] = 0  # IndexException
-
-    count = fruits.length()
-    fruits.delete(count-1)
-
-    count = fruits.length()
-    fruits.value(index=0)
-    print(fruits.value(count-2))
-
-    larr = SmartArray(from_list=[1,2,3,4,5,0,9,8,7,6])
-    sorted = larr.sort()
-    larr.clear()
-    sorted = 0
 
