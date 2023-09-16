@@ -360,11 +360,13 @@ class SmartArray:
         :param key: return the first occurrence of item with specified key
         :param value: return the first occurrence of item with specified value
         :return: the dict of item parameters: key and value in form {item.key: item.value}, or just the value in
-        case of key is None, or empty string in case of item was not found
+        case of key is None, or None in case of item was not found
         """
+        if index < 0:
+            index = self.length() - abs(index)
         item = self.__at(index, key=key, value=value)
         if item is None:
-            return ""
+            return None
 
         return item.get()
 
@@ -518,6 +520,13 @@ if __name__ == "__main__":
 
     for el in arr:
         print(f'{el}')
+
+    last_el = arr.at(-2)
+    print(last_el)
+
+    for index in range(-1, -6, -1):
+        print(f'arr[{arr.length() - abs(index)}] == {arr.at(index)}')
+
 
 
 

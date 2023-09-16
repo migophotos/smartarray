@@ -90,18 +90,27 @@ def test_array_iterator_reset():
         n += 1
 
 
-def test_array_copying_and_sort():
+def test_array_get_at_negative_index():
+    print('\n')
+    arr = SmartArray(from_list=[1, 2, 3, 4, 5])
+    for index in range(-1, -6, -1):
+        print(f'arr[{arr.length() - abs(index)}] == {arr.at(index)}')
+        assert arr.at(index) == arr[arr.length() - abs(index)]
+
+
+def test_array_copy_and_sort():
     arr = SmartArray()
     for i in range(10):
         arr.append(i)
 
     arr_copy = arr.scopy()
     assert arr_copy.length() == 10
+    print(f"\nOriginal array: {arr} .... Its copy: {arr_copy}")
+
     sorted_list = arr.sort()
     revers_sorted_list = arr_copy.sort(reverse=True)
     assert sorted_list != revers_sorted_list
-    print(f"\nOriginal array: {arr}\nIts copy: {arr_copy}")
-    print(f"Sorted list: {arr.get_sorted_list()}\nReverse sorted list: {arr_copy.get_sorted_list()}")
+    print(f"Sorted list: {arr.get_sorted_list()} .... Reversed sorted list: {arr_copy.get_sorted_list()}")
 
 
 def test_clear_array():
