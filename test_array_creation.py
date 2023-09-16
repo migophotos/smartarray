@@ -1,5 +1,4 @@
-import pytest
-from smartarray import SmartArray
+from smartarray import SmartArray, ArrayItem
 from pympler import asizeof
 
 
@@ -40,14 +39,29 @@ def test_array_creation_and_filtering():
 
 def test_array_insertion():
     arr = SmartArray()
-    arr.append(val="item 1", key="i-1")
-    arr.append(val="item 3", key="i-3")
+    arr.append(value="item 1", key="i-1")
+    arr.append(value="item 3", key="i-3")
     arr.insert(value="inserted item 0", key="key-i-0", at_index=0)
     arr.insert(value="inserted item 2", key="key-i-2", at_index=2)
     print(arr)
     assert arr.length() == 4
     assert arr.at(index=0) == {'key-i-0': 'inserted item 0'}
     assert arr.at(index=3) == {'i-3': 'item 3'}
+
+
+def test_array_copy_and_sort():
+    arr = SmartArray()
+    for i in range(10):
+        arr.append(i)
+
+    arr_copy = arr.scopy()
+    assert arr_copy.length() == 10
+    print(f"\nOriginal array: {arr} .... Its copy: {arr_copy}")
+
+    sorted_list = arr.sort()
+    revers_sorted_list = arr_copy.sort(reverse=True)
+    assert sorted_list != revers_sorted_list
+    print(f"Sorted list: {arr.get_sorted_list()} .... Reversed sorted list: {arr_copy.get_sorted_list()}")
 
 
 def test_array_modification():
@@ -98,19 +112,38 @@ def test_array_get_at_negative_index():
         assert arr.at(index) == arr[arr.length() - abs(index)]
 
 
-def test_array_copy_and_sort():
-    arr = SmartArray()
-    for i in range(10):
-        arr.append(i)
+def test_array_get_first_next_prev_items():
+    arr = SmartArray(from_list=[1, 2, 3, 4, 5])
 
-    arr_copy = arr.scopy()
-    assert arr_copy.length() == 10
-    print(f"\nOriginal array: {arr} .... Its copy: {arr_copy}")
+    # test get_first and get_next
+    item: ArrayItem | None = arr.get_item('first')
+    assert item.value == arr[0]
+    item = arr.get_next(item)
+    assert item.value == arr[1]
+    item = arr.get_next()   # in case of current is None returns first
+    assert item.value == arr[0]
 
-    sorted_list = arr.sort()
-    revers_sorted_list = arr_copy.sort(reverse=True)
-    assert sorted_list != revers_sorted_list
-    print(f"Sorted list: {arr.get_sorted_list()} .... Reversed sorted list: {arr_copy.get_sorted_list()}")
+    # test get_last and get_prev
+    item: ArrayItem | None = arr.get_item('last')
+    assert item.value == arr[-1]
+    item = arr.get_prev(item)
+    assert item.value == arr[-2]
+    item = arr.get_prev()   # in case of current is None return last
+    assert item.value == arr[-1]
+
+    # test while through all items in array
+    summary = 0
+    item: ArrayItem | None = arr.get_item()
+    while item:
+        summary += item.value
+        item = arr.get_next(item)
+    assert summary == 15
+
+    item: ArrayItem | None = arr.get_item('last')
+    while item:
+        summary -= item.value
+        item = arr.get_prev(item)
+    assert summary == 0
 
 
 def test_clear_array():

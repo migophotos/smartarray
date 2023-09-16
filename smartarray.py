@@ -1,17 +1,19 @@
-from typing import List, Dict
+from typing import List
 
 
 class ArrayItem:
     """
 
     """
+    __slots__ = ("key", "value", "prev", "next")
+
     def __init__(self, key=None, value=None, next_item=None, prev_item=None):
-        self.value = value
         self.key = key
+        self.value = value
         self.prev = prev_item
         self.next = next_item
 
-    def get(self) -> Dict:
+    def get(self):
         if self.key is None:
             return self.value
         else:
@@ -19,27 +21,9 @@ class ArrayItem:
 
 
 class SmartArray:
-    """
-    Array implementation with handy API:
-
-    append(val, key=None, count: int = 1) - append specified items to array
-    at(index: int = -1, key=None, value=None) - find and return an item by one of parameter: index or key or value
-    delete(at_index=-1, value=None, key=None) - find and delete an item from array
-    filter(by_value=None, by_key=None) - filter an item by key or by value and return dictionary
-    get_sorted_list() - return the previously sorted list
-    index(value=None, key=None) - find and return an item by key or value
-    insert(value, key=None, at_index=0) - insert an item into specified position
-    length() - returns the count of elements in array
-    scopy() - returns the safe copy of array
-    set_at(index, value=None, key=None) - store the new value and key at specified index
-    sort(reverse: bool = False, sort_by: str = "val") - sort an array and returns sorted list
-    value(index: int = -1, key=None) - find and return an item by index and or key
-    key(index: int = -1, value=None) - find and return an item by index and or value
-
-    """
     __slots__ = ("__next", "__last", "__items", "__length", "__sorted_list")
 
-    def __init__(self, length=0, initial_value=0, from_list=[], from_dict={}):
+    def __init__(self, length=0, initial_value=0, from_list: list | None = None, from_dict: dict | None = None):
         self.__next = None
         self.__last = None
         self.__items = None
@@ -49,23 +33,16 @@ class SmartArray:
         if length:
             self.__add(initial_value, n=length)
 
-        self.from_list(from_list)
-        self.from_dict(from_dict)
+        if from_list is not None:
+            self.from_list(from_list)
+        if from_dict is not None:
+            self.from_dict(from_dict)
 
         self.__length = self.length()
-
-    def from_list(self, from_list):
-        for il in from_list:
-            self.__add(il)
-
-    def from_dict(self, from_dict: dict):
-        for dk in from_dict:
-            self.__add(from_dict[dk], key=dk)
 
     def __str__(self):
         result = "["
         item = self.__items
-        key_str = val_str = ""
         while item:
             if type(item.key) == str:
                 key_str = f"'{item.key}'"
@@ -116,7 +93,7 @@ class SmartArray:
                 self.set_at(index=index, value=value[k], key=k)
         else:
             if isinstance(index, (str, float)) or index < 0:
-                raise ValueError(f"index must be integer in range from 0 upto length of array -1")
+                raise ValueError(f"index must be integer in range from 0 up to length of array -1")
             if index > self.length():
                 raise IndexError(f"index {index} out of range")
             self.set_at(index=index, value=value)
@@ -136,11 +113,11 @@ class SmartArray:
             item = item.next
         return length
 
-    def __add(self, val, key=None, n=1):
+    def __add(self, value, key=None, n=1):
         prev_item = None if not self.__last else self.__last
 
         for index in range(0, n):
-            item = ArrayItem(value=val, key=key, prev_item=prev_item)
+            item = ArrayItem(value=value, key=key, prev_item=prev_item)
 
             if not self.__items:
                 self.__items = item
@@ -153,7 +130,7 @@ class SmartArray:
 
         self.__length = self.__count()
 
-    def __at(self, index=-1, key=None, value=None) -> ArrayItem:
+    def __at(self, index=-1, key=None, value=None) -> ArrayItem | None:
         """
         Find and return an ArrayItem by index or first occurrence of item with specified key or value
         :param index:
@@ -182,11 +159,19 @@ class SmartArray:
 
         return None
 
-    def sort_by_value(self, e):
+    def __sort_by_value(self, e):
         return "" if e["value"] is None else e["value"]
 
-    def sort_by_key(self, e):
+    def __sort_by_key(self, e):
         return "" if e["key"] is None else e["key"]
+
+    def from_list(self, from_list):
+        for il in from_list:
+            self.__add(il)
+
+    def from_dict(self, from_dict: dict):
+        for dk in from_dict:
+            self.__add(from_dict[dk], key=dk)
 
     def sort(self, reverse: bool = False, sort_by: str = "val"):
         """
@@ -198,9 +183,9 @@ class SmartArray:
         list_to_sort = self.filter()
         if len(list_to_sort):
             if sort_by == "key":
-                list_to_sort.sort(reverse=reverse, key=self.sort_by_key)
+                list_to_sort.sort(reverse=reverse, key=self.__sort_by_key)
             else:
-                list_to_sort.sort(reverse=reverse, key=self.sort_by_value)
+                list_to_sort.sort(reverse=reverse, key=self.__sort_by_value)
 
             self.__sorted_list = []
             for item in list_to_sort:
@@ -370,6 +355,37 @@ class SmartArray:
 
         return item.get()
 
+    def get_item(self, start_from: str = 'first') -> ArrayItem:
+        """
+        Get reference on first or last item in array
+        :param start_from: str 'first' or 'last'
+        :return: reference on first or last item in array, or None in case of empty array
+        """
+        if start_from == 'first':
+            return self.__items
+        if start_from == 'last':
+            return self.__last
+
+    def get_next(self, current: ArrayItem | None = None) -> ArrayItem:
+        """
+        Get next item after current or None in case current item is last
+        :param current: reference on current item. if None returns the first ArrayItem reference
+        :return: next item after current or None in case current item is last
+        """
+        if current is None:
+            return self.__items
+        return current.next
+
+    def get_prev(self, current: ArrayItem | None = None) -> ArrayItem:
+        """
+        Get item before current or None in case current item is first
+        :param current: reference on current item. If None returns the last ArrayItem reference
+        :return: item before current or None in case current item is first
+        """
+        if current is None:
+            return self.__last
+        return current.prev
+
     def filter(self, by_value=None, by_key=None) -> List[{}]:
         """
         Finds all concurrences specified by key or by value, builds and
@@ -410,15 +426,15 @@ class SmartArray:
             item = item.next
         return new_arr
 
-    def append(self, val, key=None, count: int = 1) -> int:
+    def append(self, value, key=None, count: int = 1) -> int:
         """
         Append the new item at the end of SmartArray instance
-        :param val: [any] - the value
+        :param value: [any] - the value
         :param key: [any] - optional parameter
         :param count: [int] - optional parameter, the count of items to be appended
         :return: the new length of array
         """
-        self.__add(val=val, key=key, n=count)
+        self.__add(value=value, key=key, n=count)
         return self.length()
 
 
@@ -498,17 +514,17 @@ if __name__ == "__main__":
     # larr.clear()
     # sorted = 0
 
+    val = 0
     arr = SmartArray(from_list=[1, 2, 3, 4, 5])
     print(f'original array: {arr}')
-    for index, el in enumerate(arr):
-        val = arr[index]
-        arr[index] = val * val
+    for i, el in enumerate(arr):
+        val = arr[i]
+        arr[i] = val * val
 
     print(f'squared array: {arr}')
-
-    for index, el in enumerate(arr):
-        val = arr[index]
-        arr[index] = val // (index + 1)
+    for i, el in enumerate(arr):
+        val = arr[i]
+        arr[i] = val // (i + 1)
     print(f'original array: {arr}')
 
     i = 0
@@ -524,9 +540,5 @@ if __name__ == "__main__":
     last_el = arr.at(-2)
     print(last_el)
 
-    for index in range(-1, -6, -1):
-        print(f'arr[{arr.length() - abs(index)}] == {arr.at(index)}')
-
-
-
-
+    for i in range(-1, -6, -1):
+        print(f'arr[{arr.length() - abs(i)}] == {arr.at(i)}')
