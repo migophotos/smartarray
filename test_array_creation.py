@@ -1,5 +1,18 @@
 import pytest
 from smartarray import SmartArray
+from pympler import asizeof
+
+
+def test_array_slot_attribute():
+    big_arr = SmartArray(length=1_000_000, initial_value="0")
+    print(f'\nclass SmartArray size: {asizeof.asizeof(big_arr)}')
+    assert big_arr is not None
+    print(f'array length: {big_arr.length()}')
+    assert big_arr.length() == 1_000_000
+    big_arr.set_at(big_arr.length() - 1, 1000000, 1000000)
+    assert big_arr.at(big_arr.length() - 1)
+    print(f'last element: {big_arr.at(big_arr.length() - 1)}')
+    assert big_arr.at(big_arr.length() - 1) == {1000000: 1000000}
 
 
 def test_array_creation_and_filtering():
@@ -10,7 +23,7 @@ def test_array_creation_and_filtering():
     assert arr_1.length() == 10
     assert arr_1.at(arr_1.length()-1) == "empty"
 
-    arr_2 = SmartArray(from_list=[1,2,3,4,5])
+    arr_2 = SmartArray(from_list=[1, 2, 3, 4, 5])
     assert arr_2.length() == 5
     assert arr_2[4] == 5
 
@@ -55,11 +68,11 @@ def test_array_copying_and_sort():
 
     arr_copy = arr.scopy()
     assert arr_copy.length() == 10
-    s_arr = arr.sort()
-    sc_arr = arr_copy.sort()
-    assert s_arr == sc_arr
-    print(f"array: {arr}\na.copy: {arr_copy}")
-    print(f"array sorted: {arr.get_sorted_list()}\na.copy sorted: {arr_copy.get_sorted_list()}")
+    sorted_list = arr.sort()
+    revers_sorted_list = arr_copy.sort(reverse=True)
+    assert sorted_list != revers_sorted_list
+    print(f"\nOriginal array: {arr}\nIts copy: {arr_copy}")
+    print(f"Sorted list: {arr.get_sorted_list()}\nReverse sorted list: {arr_copy.get_sorted_list()}")
 
 
 def test_clear_array():

@@ -37,6 +37,8 @@ class SmartArray:
     key(index: int = -1, value=None) - find and return an item by index and or value
 
     """
+    __slots__ = ("__next", "__last", "__items", "__length", "__sorted_list")
+
     def __init__(self, length=0, initial_value=0, from_list=[], from_dict={}):
         self.__next = None
         self.__last = None
