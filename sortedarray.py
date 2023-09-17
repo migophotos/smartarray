@@ -19,35 +19,35 @@ class SortedArray(list):
             if prev_val is None:
                 prev_val = el
                 continue
-            if not self.reverse and val < prev_val:
+            if not self.reverse and el < prev_val:
                 raise IndexError
-            if self.reverse and val > prev_val:
+            if self.reverse and el > prev_val:
                 raise IndexError
 
     def __append(self, element, start: int | None = None, stop: int | None = None) -> None:
         prev_id = -1
         if self.reverse:
-            start_ind = start or arr.__len__() - 1
+            start_ind = start or self.__len__() - 1
             stop_ind = stop or -1
             for ind in range(start_ind, stop_ind, -1):
-                if element < arr[ind]:
+                if element < self[ind]:
                     super().insert(ind+1, element)
                     return
 
-                if element >= arr[ind]:
+                if element >= self[ind]:
                     prev_id = ind + 1
 
             if prev_id > 0:
                 super().insert(0, element)
         else:
             start_ind = start or 0
-            stop_ind = stop or arr.__len__()
+            stop_ind = stop or self.__len__()
             for ind in range(start_ind, stop_ind):
-                if element <= arr[ind]:
+                if element <= self[ind]:
                     super().insert(ind, element)
                     return
 
-                if element > arr[ind]:
+                if element > self[ind]:
                     prev_id = ind
 
             if prev_id >= 0:

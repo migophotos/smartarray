@@ -1,4 +1,7 @@
+from random import randint
+
 from smartarray import SmartArray, ArrayItem
+from sortedarray import SortedArray
 from pympler import asizeof
 
 
@@ -150,6 +153,42 @@ def test_clear_array():
     arr = SmartArray(from_dict={"k1": 1, "k2": 2, "k3": 3, "k4": 3, "k5": 5})
     arr.clear()
     assert(arr.length() == 0)
+
+
+def test_sorted_array_ascending():
+    arr = SortedArray()
+    for ind in range(1_000):
+        val = randint(1, 10000)
+        arr.append(val)
+
+    print(f'\nAscending sorted array length: {arr.__len__()}')
+    print(arr)
+    arr.check_valid_array()
+    assert(arr[0] < arr[len(arr)-1])
+
+
+def test_sorted_array_descending():
+    arr = SortedArray(reverse=True)
+    for ind in range(1_000):
+        val = randint(1, 10000)
+        arr.append(val)
+
+    print(f'\nDescending sorted array length: {arr.__len__()}')
+    print(arr)
+    arr.check_valid_array()
+    assert(arr[0] > arr[len(arr)-1])
+
+
+def test_sorted_array_unsorted():
+    arr = SortedArray(unsorted=True)
+    for ind in range(1_000):
+        val = randint(1, 10000)
+        arr.append(val)
+
+    print(f'\nUnsorted array length: {arr.__len__()}')
+    print(arr)
+    assert(arr[0] != arr[len(arr)-1])
+
 
 
 if __name__ == "__main__":
