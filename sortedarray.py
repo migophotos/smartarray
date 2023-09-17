@@ -11,7 +11,26 @@ class SortedArray(list):
         if self.__len__() == 0 or self.unsorted:
             super().append(element)
             return
-        self.__append(element)
+        start_index = stop_index = None
+        if not self.reverse:
+            length = len(self)
+            left = right = None
+            if length > 100:
+                left = length // 2
+                right = length - left
+
+                while right >= 50:  # and (start_index is not None and stop_index is not None):
+                    if element < self[left-1]:
+                        stop_index = left
+                        start_index = 0
+                    else:
+                        start_index = right
+                        stop_index = length
+                    length = stop_index - start_index
+                    left = length // 2
+                    right = length - left
+
+        self.__append(element, start=start_index, stop=stop_index)
 
     def check_valid_array(self):
         prev_val = None
@@ -58,7 +77,7 @@ class SortedArray(list):
 
 if __name__ == "__main__":
     arr = SortedArray(reverse=False)
-    for ind in range(3_000):
+    for ind in range(10_000):
         val = randint(1, 10000)
         # print(f'{val}')
         arr.append(val)
@@ -68,7 +87,7 @@ if __name__ == "__main__":
     arr.check_valid_array()
 
     arr = SortedArray(reverse=True)
-    for ind in range(3_000):
+    for ind in range(10_000):
         val = randint(1, 10000)
         # print(f'{val}')
         arr.append(val)
@@ -78,7 +97,7 @@ if __name__ == "__main__":
     arr.check_valid_array()
 
     arr = SortedArray(unsorted=True)
-    for ind in range(3_000):
+    for ind in range(10_000):
         val = randint(1, 10000)
         # print(f'{val}')
         arr.append(val)
