@@ -12,15 +12,6 @@ class SortedArray(list):
             super().append(element)
             return
 
-        if self.__len__() == 1:
-            if not self.reverse:
-                ind = 0 if element <= self[0] else 1
-                self.insert(ind, element)
-            else:
-                ind = 0 if element > self[0] else 1
-                self.insert(ind, element)
-            return
-
         left = 0
         right = len(self) - 1
 
@@ -55,13 +46,12 @@ class SortedArray(list):
 
 if __name__ == "__main__":
     arr = SortedArray(reverse=False)
-    for ind in range(10000):
+    for ind in range(100_000):
         val = randint(1, 100000)
         # print(f'{val}')
         arr.append(val)
 
     print(f'\nSorted array length: {arr.__len__()}')
-    print(arr)
     arr.check_valid_array()
 
     arr = SortedArray(reverse=True)
@@ -70,7 +60,6 @@ if __name__ == "__main__":
         # print(f'{val}')
         arr.append(val)
     print(f'\nReverse sorted array length: {arr.__len__()}')
-    print(arr)
     arr.check_valid_array()
 
     arr = SortedArray(unsorted=True)
@@ -79,5 +68,4 @@ if __name__ == "__main__":
         # print(f'{val}')
         arr.append(val)
     print(f'\nUnsorted array length: {arr.__len__()}')
-    print(arr)
 

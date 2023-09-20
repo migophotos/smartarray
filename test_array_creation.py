@@ -157,24 +157,22 @@ def test_clear_array():
 
 def test_sorted_array_ascending():
     arr = SortedArray()
-    for ind in range(10_000):
+    for ind in range(100_000):
         val = randint(1, 100_000)
         arr.append(val)
 
     print(f'\nAscending sorted array length: {arr.__len__()}')
-    print(arr)
     arr.check_valid_array()
     assert(arr[0] < arr[len(arr)-1])
 
 
 def test_sorted_array_descending():
     arr = SortedArray(reverse=True)
-    for ind in range(10_000):
+    for ind in range(100_000):
         val = randint(1, 100_000)
         arr.append(val)
 
     print(f'\nDescending sorted array length: {arr.__len__()}')
-    print(arr)
     arr.check_valid_array()
     assert(arr[0] > arr[len(arr)-1])
 
@@ -186,9 +184,7 @@ def test_sorted_array_unsorted():
         arr.append(val)
 
     print(f'\nUnsorted array length: {arr.__len__()}')
-    print(arr)
     assert(arr[0] != arr[len(arr)-1])
-
 
 
 if __name__ == "__main__":
