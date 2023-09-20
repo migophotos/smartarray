@@ -11,26 +11,34 @@ class SortedArray(list):
         if self.__len__() == 0 or self.unsorted:
             super().append(element)
             return
-        start_index = stop_index = None
-        if not self.reverse:
-            length = len(self)
-            left = right = None
-            if length > 100:
-                left = length // 2
-                right = length - left
 
-                while right >= 50:  # and (start_index is not None and stop_index is not None):
-                    if element < self[left-1]:
-                        stop_index = left
-                        start_index = 0
-                    else:
-                        start_index = right
-                        stop_index = length
-                    length = stop_index - start_index
-                    left = length // 2
-                    right = length - left
+        if self.__len__() == 1:
+            if not self.reverse:
+                ind = 0 if element <= self[0] else 1
+                self.insert(ind, element)
+            else:
+                ind = 0 if element > self[0] else 1
+                self.insert(ind, element)
+            return
 
-        self.__append(element, start=start_index, stop=stop_index)
+        left = 0
+        right = len(self) - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+
+            if not self.reverse:
+                if element < self[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            else:
+                if element > self[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+
+        self.insert(left, element)
 
     def check_valid_array(self):
         prev_val = None
@@ -42,43 +50,13 @@ class SortedArray(list):
                 raise IndexError
             if self.reverse and el > prev_val:
                 raise IndexError
-
-    def __append(self, element, start: int | None = None, stop: int | None = None) -> None:
-        prev_id = -1
-        if self.reverse:
-            start_ind = start or self.__len__() - 1
-            stop_ind = stop or -1
-            for ind in range(start_ind, stop_ind, -1):
-                if element < self[ind]:
-                    super().insert(ind+1, element)
-                    return
-
-                if element >= self[ind]:
-                    prev_id = ind + 1
-
-            if prev_id > 0:
-                super().insert(0, element)
-        else:
-            start_ind = start or 0
-            stop_ind = stop or self.__len__()
-            for ind in range(start_ind, stop_ind):
-                if element <= self[ind]:
-                    super().insert(ind, element)
-                    return
-
-                if element > self[ind]:
-                    prev_id = ind
-
-            if prev_id >= 0:
-                super().insert(prev_id+1, element)
-            else:
-                print(f'Not inserted value {element} at index {prev_id}')
+            prev_val = el
 
 
 if __name__ == "__main__":
     arr = SortedArray(reverse=False)
-    for ind in range(10_000):
-        val = randint(1, 10000)
+    for ind in range(10000):
+        val = randint(1, 100000)
         # print(f'{val}')
         arr.append(val)
 
@@ -87,12 +65,11 @@ if __name__ == "__main__":
     arr.check_valid_array()
 
     arr = SortedArray(reverse=True)
-    for ind in range(10_000):
-        val = randint(1, 10000)
+    for ind in range(10000):
+        val = randint(1, 100000)
         # print(f'{val}')
         arr.append(val)
     print(f'\nReverse sorted array length: {arr.__len__()}')
-    print(arr.__len__())
     print(arr)
     arr.check_valid_array()
 
@@ -102,6 +79,5 @@ if __name__ == "__main__":
         # print(f'{val}')
         arr.append(val)
     print(f'\nUnsorted array length: {arr.__len__()}')
-    print(arr.__len__())
     print(arr)
 

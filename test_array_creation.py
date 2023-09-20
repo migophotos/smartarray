@@ -157,8 +157,8 @@ def test_clear_array():
 
 def test_sorted_array_ascending():
     arr = SortedArray()
-    for ind in range(1_000):
-        val = randint(1, 10000)
+    for ind in range(10_000):
+        val = randint(1, 100_000)
         arr.append(val)
 
     print(f'\nAscending sorted array length: {arr.__len__()}')
@@ -169,8 +169,8 @@ def test_sorted_array_ascending():
 
 def test_sorted_array_descending():
     arr = SortedArray(reverse=True)
-    for ind in range(1_000):
-        val = randint(1, 10000)
+    for ind in range(10_000):
+        val = randint(1, 100_000)
         arr.append(val)
 
     print(f'\nDescending sorted array length: {arr.__len__()}')
